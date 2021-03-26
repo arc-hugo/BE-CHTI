@@ -1,6 +1,8 @@
 	PRESERVE8
 	THUMB   
-		
+	
+	export CallbackSon
+	export SortieSon
 
 ; ====================== zone de réservation de données,  ======================================
 ;Section RAM (read only) :
@@ -9,8 +11,9 @@
 
 ;Section RAM (read write):
 	area    maram,data,readwrite
-		
 
+SortieSon dcw 0
+IndexTableSon dcd 0
 	
 ; ===============================================================================================
 	
@@ -23,8 +26,9 @@
 
 
 
+CallbackSon proc
 
-
-		
-		
+	
+	bx lr
+	endp
 	END	
