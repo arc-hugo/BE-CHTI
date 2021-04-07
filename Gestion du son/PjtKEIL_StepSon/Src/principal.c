@@ -2,7 +2,7 @@
 
 // Variables bruitverre.asm
 extern int PeriodeSonMicroSec;
-extern int LongueurSon;
+extern short SortieSon;
 
 // Fonction GestionSon.s
 extern void CallbackSon(void);
@@ -19,7 +19,7 @@ CLOCK_Configure();
 
 // Configuration du Timer 4 en fonction de la période en micro seconde
 // récupérée dans bruitverre.asm
-Timer_1234_Init_ff(TIM4, 72000000*PeriodeSonMicroSec);
+Timer_1234_Init_ff(TIM4, 72*PeriodeSonMicroSec);
 
 // On ajoute la débordement (priorité 2) sur la fonction CallbackSon de GestionSon.s
 Active_IT_Debordement_Timer(TIM4, 2, CallbackSon);
@@ -28,8 +28,6 @@ Active_IT_Debordement_Timer(TIM4, 2, CallbackSon);
 //============================================================================	
 	
 	
-while	(1)
-	{
-	}
+while	(1);
 }
 
