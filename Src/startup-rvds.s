@@ -130,7 +130,7 @@ Reset_Handler    PROC
                  EXPORT  Reset_Handler             [WEAK]
      IMPORT  __main
      
-                 LDR     R0, =SystemInit
+				 LDR     R0, =SystemInit
                  BLX     R0
 
 ;
