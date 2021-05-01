@@ -22,7 +22,29 @@
 ; écrire le code ici		
 
 
-
+PartieReel proc
+	push {r4, r5, r6, r7}
+	mov r2, #0	; n = 0
+	; Commencemment de la boucle
+TantQue
+	mov r3, #64	; M = 64
+	ldrsh r4, [r0, r2, lsl #1] ; Récupération de x(n)
+	mul r5, r1, r2 ; k*n
+	and r5, #63 ; modulo pour rester dans le tableau
+	ldrsh r6, [TabCos, r5, lsl #1] ; cos(2*pi*k*n/M)
+	mul r6, r4 ; x(n)*cos(2*pi*k*n/M)
+	; ajout dans la somme total (veuille à ce que l'on ne déborde pas)
+	adds r7, r6 # TODO
+	
+	; Incrément de n et condition de boucle (n < M)
+	add r2, #1
+	subs r3, r2
+	bne TantQue
+FinTantQue
+	mov r0, r7
+	pop {r4, r5, r6, r7}
+	bx lr
+	endp
 
 
 ;Section ROM code (read only) :		
@@ -159,8 +181,5 @@ TabSin
 	DCW	-9512	; 61 0xdad8 -0.29028
 	DCW	-6393	; 62 0xe707 -0.19510
 	DCW	-3212	; 63 0xf374 -0.09802
-
-
 		
-		
-	END	
+	END
