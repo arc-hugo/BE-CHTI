@@ -1,6 +1,10 @@
 #ifndef GESTIONSON_H__
 #define GESTIONSON_H__
 
+// Variables bruitverre.asm
+// Période d'échantillonnage du son
+extern int PeriodeSonMicroSec;
+
 // Fonction StartSon.
 // Réinitialise l'index du tableau de valeur de son afin de pouvoir le rejouer.
 void StartSon(void);
