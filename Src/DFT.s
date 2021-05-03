@@ -23,21 +23,82 @@
 ; écrire le code ici		
 
 
-; Fonction appliquant le module au carré de la DFT
+; Fonction appliquant le module au carré de la DFT (format 10.22)
 ; appliquée sur un signal (tableau de short int)
 ; à un certains k (char)
+
+; Algo C
+;int DFT_ModuleAuCarre(short int * x, char k) {
+;	long int reel = PartieReel(x, k);
+;	long int img = PartieImg(x, k);
+;	reel *= reel;
+;	img *= img;
+;	int dft = (reel >> 5) + (img >> 5);
+;	return dft;
+;
+;}
 DFT_ModuleAuCarre proc
+	; Calcul partie réelle
 	push {r0, r1, lr}
 	bl PartieReel
 	mov r2, r0
 	pop {r0, r1, lr}
-	
-	mov r0, r2
+	; Calcul partie imaginaire
+	push {r0, r1, r2, lr}
+	bl PartieImg
+	mov r3, r0
+	pop {r0, r1, r2, lr}
+	; Carré des partie réelle et imaginaire, passage au format 10.54
+	smull r1, r0, r2, r2
+	smull r2, r1, r3, r3
+	; On ne récupère que l'addition des bits de poids forts au format 10.22
+	add r0, r1
 	bx lr
 	endp
 
-; Renvoi la partie réelle de la DFT
+
+; Renvoi la partie imaginaire de la DFT (format 5.27)
 ; Prend en paramètre le tableau de valeurs entières et k
+
+; Algo C
+;int PartieImg(short int * x, char k) {
+;	int img = 0;
+;	for(int n = 0; i < 64; i++) {
+;		int index = (k*n) % 64
+;		img += x[n]*TabSin[index];
+;	}
+;	return img;
+;
+;}
+PartieImg proc
+	; r0 = x
+	; r1 = k
+	push {r4, r5, r6, r7}
+	mov r2, #0 ; n = 0
+	mov r7, #0 ; reel = 0
+	ldr r3, =TabSin ; adresse TabSin
+	; Commencemment de la boucle
+TantQueImg
+	ldrsh r4, [r0, r2, lsl #1] ; Récupération de x(n)
+	mul r5, r1, r2 ; k*n
+	and r5, #63 ; modulo 64 pour rester dans le tableau
+	ldrsh r6, [r3, r5, lsl #1] ; cos(2*pi*k*n/M)
+	mul r6, r4 ; x(n)*cos(2*pi*k*n/M)
+	; ajout dans la somme total (ne déborde pas car format 5.27)
+	add r7, r6
+	; Incrément de n et condition de boucle (n < 64)
+	add r2, #1
+	cmp r2, #64
+	bne TantQueImg
+FinTantQueImg
+	mov r0, r7
+	pop {r4, r5, r6, r7}
+	bx lr
+	endp
+
+; Renvoi la partie réelle de la DFT (format 5.27)
+; Prend en paramètre le tableau de valeurs entières et k
+
 ; Algo C
 ;int PartieReel(short int * x, char k) {
 ;	int reel = 0;
