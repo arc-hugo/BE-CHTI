@@ -388,6 +388,16 @@
               <FileType>1</FileType>
               <FilePath>.\Src\principal.c</FilePath>
             </File>
+            <File>
+              <FileName>Affichage_Valise.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\Src\Affichage_Valise.h</FilePath>
+            </File>
+            <File>
+              <FileName>affichage_valise.o</FileName>
+              <FileType>3</FileType>
+              <FilePath>.\Src\affichage_valise.o</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -811,6 +821,16 @@
               <FileName>principal.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\Src\principal.c</FilePath>
+            </File>
+            <File>
+              <FileName>Affichage_Valise.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\Src\Affichage_Valise.h</FilePath>
+            </File>
+            <File>
+              <FileName>affichage_valise.o</FileName>
+              <FileType>3</FileType>
+              <FilePath>.\Src\affichage_valise.o</FilePath>
             </File>
           </Files>
         </Group>
@@ -1304,6 +1324,16 @@
               <FileName>principal.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\Src\principal.c</FilePath>
+            </File>
+            <File>
+              <FileName>Affichage_Valise.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\Src\Affichage_Valise.h</FilePath>
+            </File>
+            <File>
+              <FileName>affichage_valise.o</FileName>
+              <FileType>3</FileType>
+              <FilePath>.\Src\affichage_valise.o</FilePath>
             </File>
           </Files>
         </Group>
