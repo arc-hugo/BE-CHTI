@@ -42,7 +42,7 @@ void callbackSystick() {
 		
 		// Si le signal a été reçu plus de la moitié du temps (>= 50ms), on incrémente le score du joueurs
 		// Et on joue le son
-		if (Comptes[i] >= 12) {
+		if (Comptes[i] == 12) {
 			Scores[i]++;
 			StartSon();
 		}
@@ -95,6 +95,9 @@ Init_Conversion_On_Trig_Timer_ff(ADC1, TIM2_CC2, 225);
 Init_ADC1_DMA1(0, Buffer);
 
 /*	PARTIE AFFICHAGE	*/
+// Initialisation des périphériques d'affichage et de choix des capteurs
+Init_Affichage();
+// Mise à zéro de tous les afficheurs
 
 
 //============================================================================	
