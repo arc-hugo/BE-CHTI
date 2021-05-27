@@ -1,14 +1,19 @@
 #include "DriverJeuLaser.h"
+#include "GestionSon.h"
 #include "Affichage_Valise.h"
 
 extern int DFT_ModuleAuCarre(short int *, char);
 
+// Tableau des indices des 6 joueurs
+char k[6]= {17, 18, 19, 20, 23, 24};
+// Tableau de score des 6 joureurs
+char Scores[6] = {0,0,0,0,0,0};
+// Tableau de compte des occurances des signaux sur une période de 100ms
+char Comptes[6] = {0,0,0,0,0,0};
 // Tableau de 64 entiers courts (16 bits)
 short int Buffer[64];
-
 // Tableau de résultat de la DFT
-int DFT[64];
-
+int DFT[6];
 
 // Fonction callback de SysTick
 // Enregistre les valeurs de la DMA et appel la DFT dessus
@@ -20,8 +25,30 @@ void callbackSystick() {
 	// Arrêt
 	Stop_DMA1;
 	
-	for(char i = 0; i < 64; i++)
-		DFT[i] = DFT_ModuleAuCarre(Buffer, i);
+	for (int i = 0; i < 6; i++) {	
+		// Lancement de la DFT sur les résultats de la DMA pour les 6 signaux seulement
+		DFT[i] = DFT_ModuleAuCarre(Buffer, k[i]);
+		
+		// Si l'un de nos signaux est reçu, on incrémente le tableau de compte à l'emplacement correspondant
+		if ((DFT[i] >> 22) >= 60) {
+			Comptes[i]++;
+		}
+		// Sinon on le remet à zéro
+		else {
+			Comptes[i] = 0;
+		}
+		// Le tableau doit rester entre 0 et 20 (période 0 à 100ms)
+		Comptes[i] %= 21;
+		
+		// Si le signal a été reçu plus de la moitié du temps (>= 50ms), on incrémente le score du joueurs
+		// Et on joue le son
+		if (Comptes[i] >= 12) {
+			Scores[i]++;
+			StartSon();
+		}
+		// Le score doit rester entre 0 et 99
+		Scores[i] %= 100;
+	}
 }
 
 int main(void)
@@ -35,8 +62,18 @@ int main(void)
 CLOCK_Configure();
 
 /*	PARTIE SON	*/
-	
-	
+//	TIMER 4		//
+// Timer 4 en fonction de la période en microsecondes
+Timer_1234_Init_ff(TIM4, 72*PeriodeSonMicroSec);
+// On ajoute le débordement (priorité 2) sur la fonction CallbackSon de GestionSon.s
+Active_IT_Debordement_Timer(TIM4, 2, CallbackSon);
+
+//	TIMER 3		//
+// PWM de fréquence 100kHz
+PWM_Init_ff(TIM3, 3, 720);
+// Liaison du canal 3 à la pin PB.0
+GPIO_Configure(GPIOB, 0, OUTPUT, ALT_PPULL);
+
 /*	PARTIE DFT/DMA 	*/
 // Réglage de la périodicit du timer SysTick à 5ms
 Systick_Period_ff(360000);
@@ -46,6 +83,7 @@ Systick_Prio_IT(1, callbackSystick);
 SysTick_On;
 SysTick_Enable_IT;
 
+//	TIMER 2		//
 // Réglage de la durée de capture du signal (une microseconde)
 Init_TimingADC_ActiveADC_ff(ADC1, 72);
 // Choix de la pin dù entrée (PA2)
@@ -56,7 +94,8 @@ Init_Conversion_On_Trig_Timer_ff(ADC1, TIM2_CC2, 225);
 // Définition du buffer à remplir par la DMA
 Init_ADC1_DMA1(0, Buffer);
 
-/*	AFFICHAGE VALISE	*/
+/*	PARTIE AFFICHAGE	*/
+
 
 //============================================================================	
 
