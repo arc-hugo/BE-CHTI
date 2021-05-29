@@ -16,7 +16,7 @@ short int Buffer[64];
 int DFT[6];
 
 // Fonction callback de SysTick
-// Enregistre les valeurs de la DMA et appel la DFT dessus
+// Comptabilise les points des signaux corrspondant aux différents joueurs
 void callbackSystick() {
 	// Démarragede la DMA
 	Start_DMA1(64);
@@ -25,7 +25,7 @@ void callbackSystick() {
 	// Arrêt
 	Stop_DMA1;
 	
-	for (int i = 0; i < 6; i++) {	
+	for (int i = 0; i < 6; i++) {
 		// Lancement de la DFT sur les résultats de la DMA pour les 6 signaux seulement
 		DFT[i] = DFT_ModuleAuCarre(Buffer, k[i]);
 		
@@ -48,7 +48,13 @@ void callbackSystick() {
 		}
 		// Le score doit rester entre 0 et 99
 		Scores[i] %= 100;
+		
+		// Mise à jour du score de l'afficheur correspondant
+		if (i < 4) {
+				Prepare_Afficheur(i+1,Scores[i]);
+		}
 	}
+	Mise_A_Jour_Afficheurs_LED();
 }
 
 int main(void)
@@ -98,13 +104,20 @@ Init_ADC1_DMA1(0, Buffer);
 // Initialisation des périphériques d'affichage et de choix des capteurs
 Init_Affichage();
 // Mise à zéro de tous les afficheurs
-
+for (int i = 1; i < 5; i++)
+	Prepare_Afficheur(i,0);
+// Choix du capteur cible
+Choix_Capteur(1);
+// Allumage de la LED indiquant la cible
+Prepare_Set_LED(LED_Cible_1);
+// Mise à jour des afficheurs (envoie de trame)
+Mise_A_Jour_Afficheurs_LED();
 
 //============================================================================	
 
 while	(1)
 	{
-
+		
 	}
 }
 
