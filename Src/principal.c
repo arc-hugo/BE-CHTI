@@ -17,7 +17,7 @@ int DFT[6];
 
 // Fonction callback de SysTick
 // Comptabilise les points des signaux corrspondant aux différents joueurs
-void callbackSystick() {
+void CallbackSystick() {
 	// Démarragede la DMA
 	Start_DMA1(64);
 	// Attente
@@ -54,9 +54,13 @@ void callbackSystick() {
 				Prepare_Afficheur(i+1,Scores[i]);
 		}
 	}
-	Mise_A_Jour_Afficheurs_LED();
 }
 
+// Fonction callback de mise à jour des afficheurs
+void CallbackAffichage() {
+	Mise_A_Jour_Afficheurs_LED();
+}
+	
 int main(void)
 {
 
@@ -84,7 +88,7 @@ GPIO_Configure(GPIOB, 0, OUTPUT, ALT_PPULL);
 // Réglage de la périodicit du timer SysTick à 5ms
 Systick_Period_ff(360000);
 // Configuration de l'interruption du timer SysTick (callbackSystick en priorité 1)
-Systick_Prio_IT(1, callbackSystick);
+Systick_Prio_IT(1, CallbackSystick);
 // Lancement de Systick et validation des interruptions
 SysTick_On;
 SysTick_Enable_IT;
@@ -112,6 +116,12 @@ Choix_Capteur(1);
 Prepare_Set_LED(LED_Cible_1);
 // Mise à jour des afficheurs (envoie de trame)
 Mise_A_Jour_Afficheurs_LED();
+
+//	TIMER 1		//
+// Interruption ponctuelle (toutes les demi secondes) de TIM1 pour mettre à jour les afficheurs
+Timer_1234_Init_ff(TIM1, 36000000);
+// Priorité inférieure à 8 pour éviter un plantage de la mise à jour
+Active_IT_Debordement_Timer(TIM1, 9, CallbackSon);
 
 //============================================================================	
 
