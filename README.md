@@ -1,5 +1,5 @@
 # Bureau d'Étude CHTI - partie Assembleur
-
+## Description
 Ce dépôt contient les sources ASM pour le BE CHTI de l'INSA Toulouse (année 2020-2021).  
 Pour inspecter les différentes partie du projet, veuillez inspecter les différentes branches du dépôt.
 
@@ -9,3 +9,8 @@ Pour inspecter les différentes partie du projet, veuillez inspecter les différ
 - [Transformée de Fourier discrète](https://github.com/arc-hugo/BE-CHTI/tree/dft)
 - [Transformée de Fourier discrète sur signal réel](https://github.com/arc-hugo/BE-CHTI/tree/dft-reel)
 - [Intégration finale](https://github.com/arc-hugo/BE-CHTI/tree/final)
+
+## Étapes restantes
+- Utilisation des afficheurs 7 segments
+- Bug de son lors de l'utilisation sur valise
+- Implémentation du changement de cible
