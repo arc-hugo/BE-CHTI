@@ -3,6 +3,7 @@
 	
 	export CallbackSon
 	export StartSon
+	export InitSon
 	import Son
 	import LongueurSon
 	include Driver/DriverJeuLaser.inc
@@ -26,6 +27,14 @@ Index dcd 0
 	area    moncode,code,readonly
 ; écrire le code ici		
 
+
+InitSon proc
+	ldr r0, =Index
+	ldr r1, =LongueurSon
+	ldr r1, [r1]
+	str r1, [r0]
+	bx lr
+	endp
 
 ;Algo C
 ;void StartSon ()(

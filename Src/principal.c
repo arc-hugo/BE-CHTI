@@ -30,7 +30,7 @@ void CallbackSystick() {
 		DFT[i] = DFT_ModuleAuCarre(Buffer, k[i]);
 		
 		// Si l'un de nos signaux est reçu, on incrémente le tableau de compte à l'emplacement correspondant
-		if ((DFT[i] >> 22) >= 60) {
+		if (DFT[i] >= 60) {
 			Comptes[i]++;
 		}
 		// Sinon on le remet à zéro
@@ -72,6 +72,8 @@ int main(void)
 CLOCK_Configure();
 
 /*	PARTIE SON	*/
+// Initialisation du son
+InitSon();
 //	TIMER 4		//
 // Timer 4 en fonction de la période en microsecondes
 Timer_1234_Init_ff(TIM4, 72*PeriodeSonMicroSec);
@@ -119,10 +121,9 @@ Mise_A_Jour_Afficheurs_LED();
 
 //	TIMER 1		//
 // Interruption ponctuelle (toutes les demi secondes) de TIM1 pour mettre à jour les afficheurs
-Timer_1234_Init_ff(TIM1, 36000000);
+Timer_1234_Init_ff(TIM1, 36000);
 // Priorité inférieure à 8 pour éviter un plantage de la mise à jour
-Active_IT_Debordement_Timer(TIM1, 9, CallbackSon);
-
+Active_IT_Debordement_Timer(TIM1, 9, CallbackAffichage);
 //============================================================================	
 
 while	(1)
